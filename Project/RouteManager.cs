@@ -8,8 +8,11 @@ namespace EDNeutronRouterPlugin
         private int index = 0;
         private int totalJumps = 0;
 
+
+        //return the next SystemName.
         public string GetNextSystemName()
         {
+            
             if (SystemList.Count > 0 && index < SystemList.Count && index >= 0)
             {
                 totalJumps -= SystemList[index].GetJumpsCount();
@@ -18,6 +21,8 @@ namespace EDNeutronRouterPlugin
             }
             return "";
         }
+
+        //return the previous System name.
         public string GetPreviousSystemName()
         {
             if (SystemList.Count > 0 && index > 0 && index < SystemList.Count)
@@ -28,9 +33,17 @@ namespace EDNeutronRouterPlugin
             }
             return "";
         }
+        //return the number of jumps remaining.
+        public int GetJumpsCount()
+        {
+            return totalJumps;
+        }
+
+
+        //Return the Route.
         public void CalculateRoute(dynamic vaProxy,string currentSystem, string SystemTarget, decimal jumpDistance, int efficiency = 60)
         {
-            if(vaProxy.GetBoolean("EDNR Debug") != null && vaProxy.GetBoolean("EDNR Debug"))
+            if(vaProxy.GetBoolean("EDNR Debug") != null && vaProxy.GetBoolean("EDNR Debug")) //check Debug is on 
             {
                 vaProxy.WriteToLog("Calculate Route Debug", "purple");
                 vaProxy.WriteToLog("Current System : " + currentSystem, "yellow");
@@ -39,6 +52,7 @@ namespace EDNeutronRouterPlugin
                 vaProxy.WriteToLog("Efficency : " + efficiency.ToString(), "yellow");
             }
 
+            //check if variables are correct.
             if (currentSystem == ""  || currentSystem == null || SystemTarget == null || SystemTarget == "" || jumpDistance == 0 )
             {
                 vaProxy.WriteToLog("incorrect route informations", "red");
@@ -47,13 +61,15 @@ namespace EDNeutronRouterPlugin
             }
             SystemList = NeutronRouterAPI.GetNewRoute(currentSystem, SystemTarget, jumpDistance, efficiency, vaProxy);
             CalculateNumberOfJumps();
+            
             vaProxy.WriteToLog("route set  ::" + totalJumps.ToString(), "green");
         }
-        public void CalculateNumberOfJumps()
+        public void CalculateNumberOfJumps() //get the number of jumps for the route.
         {
             SystemList.ForEach(delegate (EDSystem system) {
                 totalJumps += system.GetJumpsCount();
             });
         }
+
     }
 }

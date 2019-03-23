@@ -43,6 +43,8 @@ namespace EDNeutronRouterPlugin
                 return SystemList;
              }
         }
+
+        //get the job id from the spansh API.
         public static IRestResponse PlotRoute(string Position, string Destination, decimal range, int Efficiency, dynamic vaProxy)
         {
             var client = new RestClient("https://spansh.co.uk/api/");
@@ -56,6 +58,7 @@ namespace EDNeutronRouterPlugin
 
 
         }
+        //get the system List from the the spansh API
         public static JObject GetRouteResults(string job)
         {
             var client = new RestClient("https://spansh.co.uk/api/");
