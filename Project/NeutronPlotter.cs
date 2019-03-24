@@ -12,9 +12,17 @@ namespace EDNeutronRouterPlugin
 
         public static List<EDSystem> GetNewRoute(string currentSystem, string SystemTarget, decimal jumpDistance, int efficiency, dynamic vaProxy)
         {
+            JObject Routeresponse;
+            var Route = PlotRoute(currentSystem, SystemTarget, jumpDistance, efficiency, vaProxy).Content;
+            if (Route == null || Route == "")
+            {
+                vaProxy.WriteToLog("error: cannot call spansh API.", "red");
+                return new List<EDSystem>();
+            }
 
-            JObject Routeresponse = JObject.Parse(PlotRoute(currentSystem, SystemTarget, jumpDistance, efficiency, vaProxy).Content);
-            if (Routeresponse["error"] != null)
+            Routeresponse = JObject.Parse(Route);
+
+            if (Routeresponse["error"] != null || Routeresponse == null)
             {
                 vaProxy.WriteToLog("incorrect values.", "red");
                 return new List<EDSystem>();
@@ -22,7 +30,6 @@ namespace EDNeutronRouterPlugin
             else
             {
                 var job = Routeresponse["job"].ToString();
-                vaProxy.WriteToLog(job, "black");
                 JObject routeResult = GetRouteResults(job);
 
                 while (routeResult["status"].ToString() == "queued")

@@ -7,18 +7,21 @@ namespace EDNeutronRouterPlugin
         public List<EDSystem> SystemList = new List<EDSystem>();
         private int index = 0;
         private int totalJumps = 0;
+        private bool isSet = false;
 
 
         //return the next SystemName.
         public string GetNextSystemName()
         {
             
-            if (SystemList.Count > 0 && index < SystemList.Count && index >= 0)
+            if (SystemList.Count > 0 && index < SystemList.Count -1 && index >= 0)
             {
                 totalJumps -= SystemList[index].GetJumpsCount();
                 index = index + 1;
                 return SystemList[index].GetSystemName();
             }
+            if (isSet)
+                return SystemList[index].GetSystemName();
             return "";
         }
 
@@ -31,6 +34,9 @@ namespace EDNeutronRouterPlugin
                 index = index - 1;
                 return SystemList[index].GetSystemName();
             }
+            if (isSet)
+                return SystemList[index].GetSystemName();
+            
             return "";
         }
         //return the number of jumps remaining.
@@ -60,9 +66,11 @@ namespace EDNeutronRouterPlugin
 
             }
             SystemList = NeutronRouterAPI.GetNewRoute(currentSystem, SystemTarget, jumpDistance, efficiency, vaProxy);
+            if (SystemList.Count == 0)
+                return;
             CalculateNumberOfJumps();
-            
-            vaProxy.WriteToLog("route set  ::" + totalJumps.ToString(), "green");
+            isSet = true;
+            vaProxy.WriteToLog("route set", "green");
         }
         public void CalculateNumberOfJumps() //get the number of jumps for the route.
         {

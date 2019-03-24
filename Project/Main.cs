@@ -48,9 +48,6 @@ namespace EDNeutronRouterPlugin
                             jumpRange = vaProxy.GetDecimal("Jump range");
 
                         route.CalculateRoute(vaProxy, SystemName, TargetSystem, jumpRange, 60);
-
-                    
-                        vaProxy.SetText("nextSystem", route.GetNextSystemName());
                         break;
                     case "nextSystem":
 
@@ -71,7 +68,6 @@ namespace EDNeutronRouterPlugin
                         break;
                     case "remainingJumps":
                         vaProxy.SetInt("Jumps Remaining", route.GetJumpsCount());
-                        vaProxy.WriteToLog(route.GetJumpsCount().ToString(), "green");
                         break;
                     default:
                         vaProxy.WriteToLog("incorrect context", "red");
