@@ -50,15 +50,15 @@ namespace EDNeutronRouterPlugin
                         break;
 
                     case "nextSystem":
-                        vaProxy.SetText("nextSystem", route.GetNextSystemName());
+                        vaProxy.SetText("Next system", route.GetNextSystemName());
                         break;
 
                     case "previousSystem":
-                        vaProxy.SetText("previousSystem", route.GetPreviousSystemName());
+                        vaProxy.SetText("Previous system", route.GetPreviousSystemName());
                         break;
 
                     case "remainingWaypoints":
-                        vaProxy.SetInt("remaining Waypoints", route.GetRemainingWaypoints());
+                        vaProxy.SetInt("Remaining waypoints", route.GetRemainingWaypoints());
                         break;
                     case "url":
                         System.Diagnostics.Process.Start("https://spansh.co.uk/plotter/results/" + route.GetRouteUrl());
