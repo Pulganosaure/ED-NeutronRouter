@@ -60,9 +60,6 @@ namespace EDNeutronRouterPlugin
                     case "remainingWaypoints":
                         vaProxy.SetInt("Remaining waypoints", route.GetRemainingWaypoints());
                         break;
-                    case "url":
-                        System.Diagnostics.Process.Start("https://spansh.co.uk/plotter/results/" + route.GetRouteUrl());
-                        break;
                     case "clearRoute":
                         vaProxy.WriteToLog("route cleared", "blue");
                         route = new RouteManager();
@@ -71,7 +68,10 @@ namespace EDNeutronRouterPlugin
                         vaProxy.SetInt("Remaining jumps", route.GetJumpsCount());
                         break;
                     case "website":
-                        route.openUrlonInternet();
+                        if (!String.IsNullOrEmpty(route.GetRouteUrl()))
+                            System.Diagnostics.Process.Start("https://spansh.co.uk/plotter/results/" + route.GetRouteUrl());
+                        else
+                            vaProxy.WriteToLog("Route not set.", "red");
                         break;
                     case "getJumpRange":
                         vaProxy.SetDecimal("Jump range", EDDIJumpRange.getJumpRange(vaProxy));

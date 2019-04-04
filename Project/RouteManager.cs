@@ -13,6 +13,7 @@ namespace EDNeutronRouterPlugin
 
         public void openUrlonInternet()
         {
+            
             System.Diagnostics.Process.Start(routeUrl);
         }
 
@@ -98,9 +99,8 @@ namespace EDNeutronRouterPlugin
                 return;
             SetJumpCount();
             if (vaProxy.GetBoolean("EDNR Debug") != null && vaProxy.GetBoolean("EDNR Debug")) //check Debug is on 
-            {
                 vaProxy.WriteToLog(RouteData.ToString(),"purple");
-            }
+            routeUrl = RouteData["job"].ToString();
             isSet = true;
             vaProxy.WriteToLog("route set", "green");
         }
