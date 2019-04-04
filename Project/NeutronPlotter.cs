@@ -10,22 +10,23 @@ namespace EDNeutronRouterPlugin
 
 
 
-        public static List<EDSystem> GetNewRoute(string currentSystem, string SystemTarget, decimal jumpDistance, int efficiency, dynamic vaProxy)
+        public static JToken GetNewRoute(string currentSystem, string SystemTarget, decimal jumpDistance, int efficiency, dynamic vaProxy)
         {
             JObject Routeresponse;
             var Route = PlotRoute(currentSystem, SystemTarget, jumpDistance, efficiency, vaProxy).Content;
             if (Route == null || Route == "")
             {
-                vaProxy.WriteToLog("error: cannot call spansh API.", "red");
-                return new List<EDSystem>();
+                vaProxy.WriteToLog("Error: cannot call spansh API.", "red");
+                return null;
             }
 
             Routeresponse = JObject.Parse(Route);
 
             if (Routeresponse["error"] != null || Routeresponse == null)
             {
-                vaProxy.WriteToLog("incorrect values.", "red");
-                return new List<EDSystem>();
+
+                vaProxy.WriteToLog("error: " + Routeresponse["error"].ToString(), "red");
+                return null;
             }
             else
             {
@@ -37,18 +38,22 @@ namespace EDNeutronRouterPlugin
                     Thread.Sleep(1000);
                     routeResult = GetRouteResults(job);
                 }
-
-                JArray Systems = routeResult["result"]["system_jumps"].ToObject<JArray>();
-                List<EDSystem> SystemList = new List<EDSystem>();
-                for (int i = 0; i < Systems.Count; i++)
-                {
-                    var System = Systems[i];
-                    EDSystem test = new EDSystem(System["distance_left"].ToObject<double>(), Systems[i]["jumps"].ToObject<int>(), Systems[i]["neutron_star"].ToObject<bool>(), Systems[i]["system"].ToObject<string>());
-                    SystemList.Add(test);
-                }
- 
-                return SystemList;
+                return routeResult["result"];
              }
+        }
+
+        public static List<EDSystem> GetSystemList(JToken routeResult)
+        {
+            JArray Systems = routeResult["system_jumps"].ToObject<JArray>();
+            List<EDSystem> SystemList = new List<EDSystem>();
+            for (int i = 0; i < Systems.Count; i++)
+            {
+                var System = Systems[i];
+                EDSystem test = new EDSystem(System["distance_left"].ToObject<double>(), Systems[i]["jumps"].ToObject<int>(), Systems[i]["neutron_star"].ToObject<bool>(), Systems[i]["system"].ToObject<string>());
+                SystemList.Add(test);
+            }
+
+            return SystemList;
         }
 
         //get the job id from the spansh API.

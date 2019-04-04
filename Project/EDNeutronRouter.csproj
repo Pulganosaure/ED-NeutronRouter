@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EDDIJumpRange.cs" />
     <Compile Include="EDSystem.cs" />
     <Compile Include="RouteManager.cs" />
     <Compile Include="NeutronPlotter.cs" />
