@@ -53,11 +53,11 @@ namespace EDNeutronRouterPlugin
         //return the number of jumps remaining.
         public int GetJumpsCount()
         {
-            return totalJumps - 1;
+            return (totalJumps - 1) < 0 ? totalJumps : totalJumps - 1;
         }
         public int GetRemainingWaypoints()
         {
-            return SystemList.Count - index - 1;
+            return (SystemList.Count - index - 1) < 0 ? SystemList.Count - index : totalJumps - index - 1;
         }
 
 
