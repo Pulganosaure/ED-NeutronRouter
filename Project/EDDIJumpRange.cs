@@ -23,9 +23,9 @@ namespace EDNeutronRouterPlugin
         }
         private static decimal GetJumpRange(JToken Build)
         {
-            if (Build["maxjump"] == null)
+            if (Build["maxjumprange"] == null)
                 return 0.0m;
-            return (decimal)Build["maxjump"];
+            return (decimal)Build["maxjumprange"];
         }
 
         private static JObject getShipMonitorData()
