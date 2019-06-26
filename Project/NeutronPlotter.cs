@@ -62,7 +62,7 @@ namespace EDNeutronRouterPlugin
             var client = new RestClient("https://spansh.co.uk/api/");
             var request = new RestRequest("route");
             request.AddParameter("efficiency", 60)
-                .AddParameter("range", 50)
+                .AddParameter("range", range)
                 .AddParameter("from", Position)
                 .AddParameter("to", Destination);
             var response = client.Get(request);
