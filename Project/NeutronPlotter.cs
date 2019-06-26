@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using RestSharp;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -22,9 +23,8 @@ namespace EDNeutronRouterPlugin
 
             Routeresponse = JObject.Parse(Route);
 
-            if (Routeresponse["error"] != null || Routeresponse == null)
+            if (Routeresponse["error"] != null)
             {
-
                 vaProxy.WriteToLog("error: " + Routeresponse["error"].ToString(), "red");
                 return null;
             }
@@ -32,11 +32,15 @@ namespace EDNeutronRouterPlugin
             {
                 var job = Routeresponse["job"].ToString();
                 JObject routeResult = GetRouteResults(job);
-
-                while (routeResult["status"].ToString() == "queued")
+                while (routeResult["status"] != null && routeResult["status"].ToString() == "queued" && routeResult["error"] == null)
                 {
                     Thread.Sleep(1000);
                     routeResult = GetRouteResults(job);
+                }
+                if (routeResult["error"] != null)
+                {
+                    vaProxy.WriteToLog(routeResult["error"].ToString(), "red");
+                    return null;
                 }
                 return routeResult["result"];
              }
@@ -59,10 +63,11 @@ namespace EDNeutronRouterPlugin
         //get the job id from the spansh API.
         public static IRestResponse PlotRoute(string Position, string Destination, decimal range, int Efficiency, dynamic vaProxy)
         {
+
             var client = new RestClient("https://spansh.co.uk/api/");
             var request = new RestRequest("route");
             request.AddParameter("efficiency", 60)
-                .AddParameter("range", range)
+                .AddParameter("range", range.ToString().Replace(",", "."))
                 .AddParameter("from", Position)
                 .AddParameter("to", Destination);
             var response = client.Get(request);
