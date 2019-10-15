@@ -33,7 +33,7 @@ spansh.co website : https://www.spansh.co.uk/plotter (thx for this beautiful too
 ## (EDDI plugin)
 - Start VoiceAttack, Login into the game. OR jump into another system to update EDDI variables.
 - set your Jump range manually or use the getJumpRange context.
-      (or catch the Jump range value from the [EDDI Loadout event])(https://github.com/EDCD/EDDI/wiki/Ship-loadout-event)
+      (or catch the Jump range value from the [EDDI Loadout event](https://github.com/EDCD/EDDI/wiki/Ship-loadout-event)
 - Open galaxy Map.
 - Target a system (don't plot a route, just target it).
 - execute your command with plugin context : "setRoute".
